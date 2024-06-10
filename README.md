@@ -7,12 +7,6 @@ Nginx app instrumented using Otel & exported to AppD SaaS
 
 - AppDynamics configuration: update the file config.yaml with necessary configurations marked in <...> block. 
 
-# Build
-
-```sh
-docker-compose -f compose.yaml build .
-```
-
 # Run
 
 ```sh
