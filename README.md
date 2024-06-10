@@ -16,5 +16,5 @@ docker-compose -f compose.yaml build .
 # Run
 
 ```sh
-docker-compose -f compose up 
+docker-compose -f compose.yaml up 
 ```
