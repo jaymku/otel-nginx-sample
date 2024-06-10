@@ -1,0 +1,49 @@
+processors:
+  resource:
+    attributes:
+    - key: appdynamics.controller.account
+      action: upsert
+      value: <account_name>
+    - key: appdynamics.controller.host
+      action: upsert
+      value: <saas_hostname>
+    - key: appdynamics.controller.port
+      action: upsert
+      value: 443
+    - key: service.namespace
+      action: upsert		
+      value: "DemoNginx_namespace"
+    - key: service.name
+      value: "DemoNginxSvc"
+      action: upsert
+  batch:
+    timeout: 30s
+    send_batch_size: 90
+
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+        cors:
+           allowed_origins:
+           - '*'
+
+exporters:
+  logging:
+    loglevel: DEBUG
+  otlphttp:
+    endpoint: <AppD sls endpoint>
+    headers: {"x-api-key": <provide_api_key>}
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [resource, batch]
+      exporters: [otlphttp]
+  telemetry:
+    logs:
+      level: "DEBUG"

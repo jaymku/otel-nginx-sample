@@ -1,0 +1,23 @@
+version: '3.7'
+services:
+  nginx-webapp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - OTEL_EXPORTER_OTLP_ENDPOINT="http://otel-collector:4318"
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/app
+    depends_on:
+      - otel-collector
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib
+    stdin_open: true
+    command: ["--config=/etc/otel-collector-config.yml"]
+    volumes:
+      - ./config.yaml:/etc/otel-collector-config.yml
+    ports:
+      - "4317:4317"        # OTLP gRPC receiver
+      - "4318:4318"        # OTLP http receiver
